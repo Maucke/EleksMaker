@@ -3,6 +3,9 @@
 
 #include <arduino.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 #define PITITEM 90
 typedef struct
 {
@@ -92,4 +95,10 @@ void SetChannel(uint8_t index,uint8_t able);
 #define CRTVANE 81
 #define CRTVADS 82
 #define DAMPTYP 83
+
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

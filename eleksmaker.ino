@@ -18,8 +18,9 @@
 #include "OLED_Driver.h"
 #include "OLED_GFX.h"
 #include "OLED_FFT.h"
-#include "sysmain.h"
 #include "OLED_UI.h"
+#include "sysmain.h"
+#include "motion.h"
 
 // Define Functions below here or use other .ino or cpp files
 //

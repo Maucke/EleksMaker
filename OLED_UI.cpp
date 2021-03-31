@@ -5,6 +5,7 @@
 #include "math.h"
 #include "image.h"
 #include "string.h"
+#include "motion.h"
 
 #ifdef __cplusplus
 extern "C"  {
