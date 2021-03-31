@@ -3,6 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 PIT pit[PITITEM];
 int absl(int num)
 {
@@ -100,3 +105,8 @@ void SetChannel(uint8_t index,uint8_t channel)
 {
 	pit[index].channel = channel;
 }
+
+
+#ifdef __cplusplus
+}
+#endif
