@@ -314,7 +314,7 @@ static void procParse(const byte* pData, uint len) {
 			Device_Cmd.commandmotion = 6;
 
 
-		
+
 	}break;
 	case Command_Style:
 		if (Device_Cmd.commandstyle != MAKEWORD(pData[6], pData[5]))
@@ -338,25 +338,25 @@ static void procParse(const byte* pData, uint len) {
 		if (Device_Cmd.commandset != MAKEWORD(pData[6], pData[5]))
 		{
 			Device_Cmd.commandset = MAKEWORD(pData[6], pData[5]);
-			
+
 		}break;
 	case Command_RGBMode:
 		if (Device_Cmd.commandrgbmode != MAKEWORD(pData[6], pData[5]))
 		{
 			Device_Cmd.commandrgbmode = MAKEWORD(pData[6], pData[5]);
-			
+
 		}break;
 	case Command_RGBBrightness:
 		if (Device_Cmd.commandrgbbrightness != MAKEWORD(pData[6], pData[5]))
 		{
 			Device_Cmd.commandrgbbrightness = MAKEWORD(pData[6], pData[5]);
-			
+
 		}break;
 	case Command_RGBColor:
 		if (Device_Cmd.commandrgbcolor != MAKEWORD(pData[6], pData[5]))
 		{
 			Device_Cmd.commandrgbcolor = MAKEWORD(pData[6], pData[5]);
-			
+
 		}break;
 	case Command_TOPTHEME:
 		if (Device_Cmd.commandtoptheme != MAKEWORD(pData[6], pData[5]))
@@ -366,7 +366,7 @@ static void procParse(const byte* pData, uint len) {
 				drache_printf("Current top %d\r\n", Device_Cmd.commandtoptheme);
 			else
 				drache_printf("Current top 1\r\n");
-			
+
 		}break;
 	case Command_LOGOTHEME:
 		if (Device_Cmd.commandlogotheme != MAKEWORD(pData[6], pData[5]))
@@ -376,7 +376,7 @@ static void procParse(const byte* pData, uint len) {
 				drache_printf("Current logo %d\r\n", Device_Cmd.commandlogotheme);
 			else
 				drache_printf("Current logo 5\r\n");
-			
+
 		}break;
 	case Command_GAMETYPE:
 		if (Device_Cmd.commandgametype != MAKEWORD(pData[6], pData[5]))
@@ -389,13 +389,13 @@ static void procParse(const byte* pData, uint len) {
 				Device_Cmd.commandgametype = 0xF;
 				drache_printf("Mode Auto\r\n");
 			}
-			
+
 		}break;
 	case Command_DEVICENAME:
 		memset(&Device_Name, 0, sizeof(Device_Name));
 
 		for (i = 0; i < pData[4]; i++) Device_Name[i] = pData[i + 5];
-		
+
 		break;
 	case 0x101:for (i = 0; i < pData[4]; i++) Device_Msg.cpuname[i] = pData[i + 5]; break;
 	case 0x102:for (i = 0; i < pData[4]; i++) Device_Msg.gpuname[i] = pData[i + 5]; break;

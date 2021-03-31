@@ -7,33 +7,33 @@
 extern "C" {
 #endif
 #define PITITEM 90
-typedef struct
-{
-	float target;
-	float current;
-	uint8_t match;
-	uint8_t channel;
-}PIT;
+	typedef struct
+	{
+		float target;
+		float current;
+		uint8_t match;
+		uint8_t channel;
+	}PIT;
 
-extern PIT pit[PITITEM];
+	extern PIT pit[PITITEM];
 
-void DampAutoPos(uint8_t channel);
-void DampManualPos(float step,uint8_t channel);
-void DampCustormPos(uint16_t index,float step);
+	void DampAutoPos(uint8_t channel);
+	void DampManualPos(float step, uint8_t channel);
+	void DampCustormPos(uint16_t index, float step);
 
-void SetCurrent(uint8_t index,float value);
-void SetTarget(uint8_t index,float value);
-void SetChannel(uint8_t index,uint8_t able);
+	void SetCurrent(uint8_t index, float value);
+	void SetTarget(uint8_t index, float value);
+	void SetChannel(uint8_t index, uint8_t able);
 
-//#define POSNRCT 0
-//#define POSNRCD 1
-//#define POSNTOP 2
-//#define POSNBAR 3
-//#define POSNBAT 4
-//#define POSNBRO 5
-//#define CRTVANE 6
-//#define CRTVADS 7
-//#define DAMPTYP 8
+	//#define POSNRCT 0
+	//#define POSNRCD 1
+	//#define POSNTOP 2
+	//#define POSNBAR 3
+	//#define POSNBAT 4
+	//#define POSNBRO 5
+	//#define CRTVANE 6
+	//#define CRTVADS 7
+	//#define DAMPTYP 8
 
 #define PNTHOUR 10
 #define PNTMIN 11

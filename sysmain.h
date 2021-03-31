@@ -17,9 +17,9 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
+  /* USER CODE END Header */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
+  /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
 
@@ -32,25 +32,25 @@ extern "C" {
 
 #define True		1		
 #define False		0		
- 
-typedef struct{
-	uint8_t autotimeset;
-	char addr[7];
-	uint8_t hour;
-	uint8_t min;
-	char hourc[3];
-	char minc[3];
-	uint16_t motionset;
-	uint16_t rgbcolor;
-	uint16_t rgbmode;
-	char uid[20];
-	uint8_t autoswdis;
-	uint8_t autoswtime;
-	char autoswtimec[3];
-	uint8_t fanswdis;
-}ConfigSet;
-extern ConfigSet set;
-	
+
+	typedef struct {
+		uint8_t autotimeset;
+		char addr[7];
+		uint8_t hour;
+		uint8_t min;
+		char hourc[3];
+		char minc[3];
+		uint16_t motionset;
+		uint16_t rgbcolor;
+		uint16_t rgbmode;
+		char uid[20];
+		uint8_t autoswdis;
+		uint8_t autoswtime;
+		char autoswtimec[3];
+		uint8_t fanswdis;
+	}ConfigSet;
+	extern ConfigSet set;
+
 #define Radius 60
 #define RadiusC 56
 #define RadiusB 53
@@ -58,9 +58,9 @@ extern ConfigSet set;
 #define MinRadius 40+2
 #define SecRadius 50+2
 #define RLV Radius/2
-	
-extern uint16_t Display_Mode;
-extern uint16_t Current_Mode ;
+
+	extern uint16_t Display_Mode;
+	extern uint16_t Current_Mode;
 #define MODE_DEFALUT      	0x00
 #define MODE_OFFLINE    	  0x01
 #define MODE_DATE    	  		0x02
@@ -134,101 +134,101 @@ extern uint16_t Current_Mode ;
 
 #define Uart_FFT_Length 192
 
-typedef struct
-{
-	uint16_t cputemp;
-	uint16_t cpuclock;
-	uint16_t cpuload;
-	uint16_t cpufan;
-	uint16_t cpupower;
+	typedef struct
+	{
+		uint16_t cputemp;
+		uint16_t cpuclock;
+		uint16_t cpuload;
+		uint16_t cpufan;
+		uint16_t cpupower;
 
-	uint16_t gputemp;
-	uint16_t gpuclock;
-	uint16_t gpuload;
-	uint16_t gpufan;
+		uint16_t gputemp;
+		uint16_t gpuclock;
+		uint16_t gpuload;
+		uint16_t gpufan;
 
-	uint16_t maintemp;
-	uint16_t mainfan;
-	uint16_t mainvoltage;
+		uint16_t maintemp;
+		uint16_t mainfan;
+		uint16_t mainvoltage;
 
-	uint16_t ramload;
-	uint16_t ramusrdata;
+		uint16_t ramload;
+		uint16_t ramusrdata;
 
-	uint16_t hddload;
-	uint16_t hddtemp;
+		uint16_t hddload;
+		uint16_t hddtemp;
 
-	uint16_t uartyear;
-	uint16_t uartmonth;
-	uint16_t uartday;
-	uint16_t uartweek;
-	uint16_t uarthour;
-	uint16_t uartminute;
-	uint16_t uartsecond;
+		uint16_t uartyear;
+		uint16_t uartmonth;
+		uint16_t uartday;
+		uint16_t uartweek;
+		uint16_t uarthour;
+		uint16_t uartminute;
+		uint16_t uartsecond;
 
-	char cpuname[40];
-	char gpuname[40];
-	char mainname[40];
-	uint8_t fft[Uart_FFT_Length];
-	uint16_t leftvol;
-	uint16_t rightvol;
-}DEVICE_MSG;
+		char cpuname[40];
+		char gpuname[40];
+		char mainname[40];
+		uint8_t fft[Uart_FFT_Length];
+		uint16_t leftvol;
+		uint16_t rightvol;
+	}DEVICE_MSG;
 
-typedef struct
-{
-	uint16_t commandmode;
-	uint16_t commandmotion;
-	uint16_t commandstyle;
-	uint16_t commandspeed;
-	uint16_t commandset;
-	uint16_t commandbrightness;
-	uint16_t commandrgbmode;
-	uint16_t commandrgbcolor;
-	uint16_t commandrgbbrightness;
-	uint16_t commandtoptheme;
-	uint16_t commandlogotheme;
-	uint16_t commandgametype;
-	uint16_t commandtimetheme;
-}DEVICE_CMD;
+	typedef struct
+	{
+		uint16_t commandmode;
+		uint16_t commandmotion;
+		uint16_t commandstyle;
+		uint16_t commandspeed;
+		uint16_t commandset;
+		uint16_t commandbrightness;
+		uint16_t commandrgbmode;
+		uint16_t commandrgbcolor;
+		uint16_t commandrgbbrightness;
+		uint16_t commandtoptheme;
+		uint16_t commandlogotheme;
+		uint16_t commandgametype;
+		uint16_t commandtimetheme;
+	}DEVICE_CMD;
 
-typedef struct
-{
-	char cputemp[10];
-	char cpuclock[10];
-	char cpuload[10];
-	char cpufan[10];
+	typedef struct
+	{
+		char cputemp[10];
+		char cpuclock[10];
+		char cpuload[10];
+		char cpufan[10];
 
-	char gputemp[10];
-	char gpuclock[10];
-	char gpuload[10];
-	char gpufan[10];
+		char gputemp[10];
+		char gpuclock[10];
+		char gpuload[10];
+		char gpufan[10];
 
-	char maintemp[10];
-	char mainfan[10];
+		char maintemp[10];
+		char mainfan[10];
 
-	char ramload[10];
-	char ramusrdata[10];
+		char ramload[10];
+		char ramusrdata[10];
 
 
-	//	char vtime[10];
-	//	char vhour[10];
-	//	char vmin[10];	
-	//	char vsec[10];	
-	//	char date[10];	
+		//	char vtime[10];
+		//	char vhour[10];
+		//	char vmin[10];	
+		//	char vsec[10];	
+		//	char date[10];	
 
-}DEVICE_STR;
+	}DEVICE_STR;
 
-extern DEVICE_STR Device_Str;
-extern DEVICE_STR Device_NStr;
-extern DEVICE_STR Device_VStr;
-extern DEVICE_MSG Device_Msg;
-extern DEVICE_CMD Device_Cmd;
+	extern DEVICE_STR Device_Str;
+	extern DEVICE_STR Device_NStr;
+	extern DEVICE_STR Device_VStr;
+	extern DEVICE_MSG Device_Msg;
+	extern DEVICE_CMD Device_Cmd;
 
-typedef enum
-{
- online,offline
-}STA;
-extern STA systemstatus;
-extern uint16_t offlinecount;
+	typedef enum
+	{
+		online, offline
+	}STA;
+	extern STA systemstatus;
+	extern uint16_t offlinecount;
 
 #ifdef __cplusplus
 }
