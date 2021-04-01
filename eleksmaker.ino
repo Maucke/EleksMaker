@@ -38,6 +38,9 @@ DEVICE_STR Device_Str;
 DEVICE_STR Device_NStr;
 DEVICE_STR Device_VStr;
 
+char fpschar[50];
+bool showfpsflag = true;
+int fps = 0;
 
 static uint8_t TimeTHEME = 0;
 
@@ -115,6 +118,26 @@ void MainSysRun()
 		}
 	}
 }
+hw_timer_t* Timer10ms = NULL;
+hw_timer_t* Timer500ms = NULL;
+
+void IRAM_ATTR onTimer10ms()//定义中断函数：【中断应加载到IRAM中，且无返回值】
+{
+	MainSysRun();
+	oled.Calc_Color();
+	DampAutoPos(0);
+}
+
+void IRAM_ATTR onTimer500ms()//定义中断函数：【中断应加载到IRAM中，且无返回值】
+{
+	static int runcount = 0;
+	oled.Set_Wheel(runcount++ % 96);
+	if (runcount % 2)
+	{
+		snprintf(fpschar, sizeof(fpschar), "%d", fps); fps = 0;
+	}
+//	Serial.println(millis());
+}
 
 
 // The setup() function runs once each time the micro-controller starts
@@ -124,18 +147,26 @@ void setup()
 	Serial.setTimeout(1);
 	oled.Device_Init();
 	motion.OLED_AllMotion_Init();
+
+	Timer10ms = timerBegin(0, 80, true);//备用知识：定时器的型号选用           预分频【主频：80MHz】                   定时器上下计数【true？】
+	timerAttachInterrupt(Timer10ms, &onTimer10ms, true);//初始化完毕候，将定时器连接到中断：                定时器地址指针              中断处理函数                   中断边沿触发类型
+	timerAlarmWrite(Timer10ms, 10000, true);//定时：         操作的定时器                  定时时长                数值是否重载【周期定时？】
+	timerAlarmEnable(Timer10ms);//开始启动：            启动哪一个定时器？
+
+	Timer500ms = timerBegin(1, 80, true);//备用知识：定时器的型号选用           预分频【主频：80MHz】                   定时器上下计数【true？】
+	timerAttachInterrupt(Timer500ms, &onTimer500ms, true);//初始化完毕候，将定时器连接到中断：                定时器地址指针              中断处理函数                   中断边沿触发类型
+	timerAlarmWrite(Timer500ms, 500000, true);//定时：         操作的定时器                  定时时长                数值是否重载【周期定时？】
+	timerAlarmEnable(Timer500ms);//开始启动：            启动哪一个定时器？
 }
 
 // Add the main program code into the continuous loop() function
 void loop()
 {
-	static int runcount = 0;
-	MainSysRun();
 	oled.Clear_Screen();
 	motion.OLED_CustormMotion(Device_Cmd.commandmotion);
-	//fps++;
-	//if (showfpsflag)
-	//	oled.OLED_SHFAny(0, 0, fpschar, 19, 0xffff);
+	fps++;
+	if (showfpsflag)
+		oled.OLED_SHFAny(0, 0, fpschar, 19, 0xffff);
 	switch (Current_Mode)
 	{
 	case MODE_GAME:ui.SUIMainShow(); break;
@@ -155,9 +186,6 @@ void loop()
 	case MODE_OFFLINE:break;
 		//			default:ui.SUIMainShow();break;
 	}
-
-	oled.Set_Wheel(runcount % 9600 / 100);
-	oled.Calc_Color();
 
 	oled.Refrash_Screen();
 	threadLoop();

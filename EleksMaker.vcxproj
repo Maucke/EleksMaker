@@ -130,10 +130,11 @@
     <ClInclude Include="OLED_UI.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="sysmain.h" />
     <ClInclude Include="__vm\.EleksMaker.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="motion.c">
+    <ClCompile Include="motion.cpp">
       <FileType>CppCode</FileType>
     </ClCompile>
     <ClCompile Include="OLED_Animation.cpp" />
