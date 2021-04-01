@@ -45,11 +45,17 @@
     <ClInclude Include="OLED_UI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sysmain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spaceman.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmp.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="motion.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OLED_Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,6 +69,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OLED_UI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="motion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

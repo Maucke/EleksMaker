@@ -105,7 +105,7 @@ extern "C" {
 
 		void Set_DampColor(uint16_t color);
 		void Set_Wheel(uint16_t WheelPos);
-		void Set_Wheelf(uint16_t WheelPos);
+		void Set_Wheel(uint16_t WheelPos, uint8_t min);
 
 		void OLED_SNF6x8(int x, int y, char* ch);
 		void Clear_FpsCount(void);

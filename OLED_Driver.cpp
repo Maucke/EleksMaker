@@ -4,6 +4,9 @@
 #include <TFT_eSPI.h>
 #include <SPI.h>
 #include "stdlib.h"
+#include "Digital_F18x24.h"
+#include "Digital_F30x46.h"
+#include "wryh_10x16.h"
 
 
 uint16_t color_byte, color_Damp_byte;
@@ -103,6 +106,30 @@ extern "C" {
 		{
 			red = (32 * 3) - 1 - WheelPos;
 			green = 0;
+			blue = WheelPos - (32 * 2);
+		}
+		color_Damp_byte = (red << 11 | green << 5 | blue);
+	}
+	void OLED_Driver::Set_Wheel(uint16_t WheelPos,uint8_t min) {
+
+		uint8_t red, green, blue;
+		wheel = WheelPos;
+		if (WheelPos < 32)
+		{
+			red = min;
+			green = WheelPos;
+			blue = (31 - WheelPos);
+		}
+		else if (WheelPos < (32 * 2))
+		{
+			red = WheelPos - 32;
+			green = 32 * 2 - 1 - WheelPos;
+			blue = min;
+		}
+		else
+		{
+			red = (32 * 3) - 1 - WheelPos;
+			green = min;
 			blue = WheelPos - (32 * 2);
 		}
 		color_Damp_byte = (red << 11 | green << 5 | blue);
@@ -429,11 +456,13 @@ extern "C" {
 			switch (w)
 			{
 			case 4:OLED_HFAny(x, y, 4, 5, c, Defu_XF4x5, color); break;
-			case 10:OLED_HFAny(x, y, 10, 13, c, GeForce_10x13, color); break;
+			case 18:if (c + '0' == ':')c = 10;  OLED_HFAny(x, y, 18, 24, c, image_Digital_F18x24, color); break;
+			case 30:if (c + '0' == ':')c = 10;  OLED_HFAny(x, y, 30, 46, c, image_Digital_F30x46, color); break;
+			case 10:if (ch[j] == '.') c = 11; OLED_HFAny(x, y, 10, 13, c, GeForce_10x13, color); break;
 			case 13:OLED_HFAny(x, y, 13, 16, c, GeForce_13x16, color); break;
 			case 19:OLED_HFAny(x, y, 19, 23, c, GeForce_19x23, color); break;
 			case 25:OLED_HFAny(x, y, 25, 37, c, GeForce_25x37, color); break;
-			default:OLED_HFAny(x, y, 10, 13, c, GeForce_10x13, color); break;
+			default:if (ch[j] == '.') c = 11; OLED_HFAny(x, y, 10, 13, c, GeForce_10x13, color); break;
 			}
 			x += w;
 			j++;

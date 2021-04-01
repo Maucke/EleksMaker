@@ -14,6 +14,7 @@
 //
 
 #include <stdarg.h>
+#include <TFT_eSPI.h>
 #include "OLED_Animation.h"
 #include "OLED_Driver.h"
 #include "OLED_GFX.h"
@@ -21,6 +22,9 @@
 #include "OLED_UI.h"
 #include "sysmain.h"
 #include "motion.h"
+#include "Spaceman.h"
+#include "bmp.h"
+#include "wryh_16x16.h"
 
 // Define Functions below here or use other .ino or cpp files
 //
@@ -39,7 +43,7 @@ DEVICE_STR Device_NStr;
 DEVICE_STR Device_VStr;
 
 char fpschar[50];
-bool showfpsflag = true;
+bool showfpsflag = false;
 int fps = 0;
 
 static uint8_t TimeTHEME = 0;
@@ -131,12 +135,12 @@ void IRAM_ATTR onTimer10ms()//定义中断函数：【中断应加载到IRAM中，且无返回值】
 void IRAM_ATTR onTimer500ms()//定义中断函数：【中断应加载到IRAM中，且无返回值】
 {
 	static int runcount = 0;
-	oled.Set_Wheel(runcount++ % 96);
+	oled.Set_Wheel(runcount++ % 96, 31);
 	if (runcount % 2)
 	{
 		snprintf(fpschar, sizeof(fpschar), "%d", fps); fps = 0;
 	}
-//	Serial.println(millis());
+	//	Serial.println(millis());
 }
 
 
@@ -158,40 +162,95 @@ void setup()
 	timerAlarmWrite(Timer500ms, 500000, true);//定时：         操作的定时器                  定时时长                数值是否重载【周期定时？】
 	timerAlarmEnable(Timer500ms);//开始启动：            启动哪一个定时器？
 }
-
+extern TFT_eSPI tft;
 // Add the main program code into the continuous loop() function
 void loop()
 {
+	static int runcount = 0;
 	oled.Clear_Screen();
 	motion.OLED_CustormMotion(Device_Cmd.commandmotion);
 	fps++;
 	if (showfpsflag)
 		oled.OLED_SHFAny(0, 0, fpschar, 19, 0xffff);
-	switch (Current_Mode)
-	{
-	case MODE_GAME:ui.SUIMainShow(); break;
-	case MODE_NORMAL:ui.NUIMainShow(); break;
-	case MODE_MUSIC:ui.MUIMainShow(); break;
-	case MODE_DATE:switch (TimeTHEME)
-	{
-	case 0:ui.TUIMainShow(); break;
-	case 1:ui.T1UIMainShow(); break;
-	case 2:ui.T2UIMainShow(); break;
-	default:Device_Cmd.commandtimetheme = 0; break;
-		//				case 2:ui.T2UIMainShow();break;
-	}
-				  break;
-	case MODE_SHOW:ui.HUIMainShow(); break;
-	case MODE_CHROME:ui.GAMEUIMainShow(); break;
-	case MODE_OFFLINE:break;
-		//			default:ui.SUIMainShow();break;
-	}
+
+	//switch (Current_Mode)
+	//{
+	//case MODE_GAME:ui.SUIMainShow(); break;
+	//case MODE_NORMAL:ui.NUIMainShow(); break;
+	//case MODE_MUSIC:ui.MUIMainShow(); break;
+	//case MODE_DATE:switch (TimeTHEME)
+	//{
+	//case 0:ui.TUIMainShow(); break;
+	//case 1:ui.T1UIMainShow(); break;
+	//case 2:ui.T2UIMainShow(); break;
+	//default:Device_Cmd.commandtimetheme = 0; break;
+	//	//				case 2:ui.T2UIMainShow();break;
+	//}
+	//			  break;
+	//case MODE_SHOW:ui.HUIMainShow(); break;
+	//case MODE_CHROME:ui.GAMEUIMainShow(); break;
+	//case MODE_OFFLINE:break;
+	//	//			default:ui.SUIMainShow();break;
+	//}
+	oled.Display_hbmp(74, 60, 70, 70, Anim_Spaceman[runcount++ / 5 % 9], 0xffff, 0);
+	oled.OLED_SHFAny(40, 10, "12", 30, 0xffff);
+	oled.OLED_SHFAny(40 + 30 * 2, 10, ":", 30, 0xffff);
+	oled.OLED_SHFAny(40 + 30 * 2 + 10, 10, "34", 30, 0xffff);
+	oled.OLED_SHFAny(180, 30, "56", 18, 0xffff);
+	showdateandweek(160,78, runcount, runcount/100%12+1, runcount/10%31+1, runcount/70%7, runcount/100%12+1, runcount / 10 % 30 + 1);
 
 	oled.Refrash_Screen();
 	threadLoop();
 }
 
+void showdateandweek(int x,int y,int year,int month,int day,int week,int nmonth,int nday)
+{
+	char tempstr[10];
+	if (nmonth == 1)
+		oled.Display_hbmp(5 + 0 + x, 0 + y, 16, 16, image_wryh_16x16[15], 0xffff, 0);//正
+	else if (nmonth == 11)
+		oled.Display_hbmp(5 + 0 + x, 0 + y, 16, 16, image_wryh_16x16[16], 0xffff, 0);//冬
+	else if (nmonth == 1)
+		oled.Display_hbmp(5 + 0 + x, 0 + y, 16, 16, image_wryh_16x16[17], 0xffff, 0);//腊
+	else
+		oled.Display_hbmp(5+0 + x, 0 + y, 16, 16, image_wryh_16x16[month], 0xffff, 0);
+	oled.Display_hbmp(5+0 + 16 + x, 0 + y, 16, 16, image_wryh_16x16[12], 0xffff, 0);
+	if (nday <= 10)
+	{
+		oled.Display_hbmp(5+0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[15], 0xffff, 0);//正
+		oled.Display_hbmp(5+0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday], 0xffff, 0);
+	}
+	else if (nday > 20&&nday<30)
+	{
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[14], 0xffff, 0);//廿
+		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday%10], 0xffff, 0);
+	}
+	else if (nday == 20)
+	{
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[14], 0xffff, 0);
+		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);
+	}
+	else if (nday == 30)
+	{
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[3], 0xffff, 0);
+		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);
+	}
+	else if (nday > 10&& nday < 20)
+	{
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);
+		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday % 10], 0xffff, 0);
+	}
 
+	oled.Display_hbmp(0 + 0 + x, 20 + y, 16, 16, image_wryh_16x16[11], 0xffff, 0);//周
+	oled.Display_hbmp(0 + 16 + x, 20 + y, 16, 16, image_wryh_16x16[week%7], 0xffff, 0);
+
+	sprintf(tempstr,"%d",month);
+	oled.OLED_SHFAny(0 + 36 + x, 22 + y, tempstr, 10, 0xffff);
+	oled.OLED_SHFAny(0 + 36 + 10 * (month < 10 ? 1 : 2) - 1 + x, 22 + y, ".", 10, 0xffff);
+	sprintf(tempstr, "%d", day);
+	oled.OLED_SHFAny(0 + 36 + 10 * (month < 10 ? 2 : 3) - 4 + x, 22 + y, tempstr, 10, 0xffff);
+
+}
 
 #define UART_DATA_BUF_LEN			1024	// 16KB
 bool mIsOpen = true;
