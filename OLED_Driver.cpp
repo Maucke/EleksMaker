@@ -12,7 +12,7 @@
 uint16_t color_byte, color_Damp_byte;
 
 uint16_t wheel;
-uint16_t OLED_GRAM[SCR_WIDTH * SCR_HEIGHT];
+uint16_t *OLED_GRAM;
 uint16_t color_now, color_half, color_min;
 
 #define TFT_MOSI            19
@@ -23,7 +23,7 @@ uint16_t color_now, color_half, color_min;
 
 #define TFT_BL              4   // Display backlight control pin
 
-TFT_eSPI tft = TFT_eSPI(135, 240); // Invoke custom library
+TFT_eSPI tft = TFT_eSPI(SCR_HEIGHT, SCR_WIDTH); // Invoke custom library
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -216,19 +216,18 @@ extern "C" {
 
 	void OLED_Driver::Refrash_Screen(void) {
 
-		tft.pushImage(0, 0, 240, 135, OLED_GRAM);
+		tft.pushImage(0, 0, SCR_WIDTH, SCR_HEIGHT, OLED_GRAM);
 	}
 
 
 	void OLED_Driver::Clear_Screen(void) {
 
-		//int i,j;
-		//for(i=0;i<SCR_HEIGHT;i++)  {
-		//  for(j=0;j<SCR_WIDTH;j++)  {
-		//    OLED_GRAM[j+i*SCR_WIDTH] = 0;
-		//  }
-		//}
-		memset(OLED_GRAM, 0, sizeof(OLED_GRAM));
+		int i,j;
+		for(i=0;i<SCR_HEIGHT;i++)  {
+		  for(j=0;j<SCR_WIDTH;j++)  {
+		    OLED_GRAM[j+i*SCR_WIDTH] = 0;
+		  }
+		}
 	}
 
 	void OLED_Driver::Draw_Pixel(long x, long y)
@@ -253,7 +252,7 @@ extern "C" {
 
 
 	void OLED_Driver::Device_Init(void) {
-
+		OLED_GRAM = (uint16_t*)malloc(sizeof(uint16_t) * SCR_WIDTH * SCR_HEIGHT);
 		tft.init();
 		tft.setRotation(1);
 		tft.setSwapBytes(true);

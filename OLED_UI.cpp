@@ -966,7 +966,7 @@ extern "C" {
 	char tempchar[50];
 
 	OLED_STATUS OLED_UI::GAMEUIMainShow() {
-		static int count = 0;
+		static int count = 0; Serial.println("Initok1");
 		if (short_key1_flag)
 		{
 			short_key1_flag = 0;
@@ -994,7 +994,7 @@ extern "C" {
 			{
 				short_key2_flag = 0;
 				red_click();
-			}
+			}Serial.println("Initok2");
 			sprintf(tempchar, "HIGHEST:%dM", highdistance);
 			oled.OLED_SBFAny(80 - strlen(tempchar) * 9 / 2, 10 + pit[70].current - 30, tempchar, 9, 0xffff);
 			hardspeed = 0;

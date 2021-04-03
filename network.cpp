@@ -8,8 +8,8 @@
 extern "C" {
 #endif
 
-	const char* ssid = "Mark";
-	const char* password = "sss11223344";
+	const char* ssid = "306Lifi";
+	const char* password = "sss11223344.";
 
     extern ESP32Time rtc;
     void get_time() {

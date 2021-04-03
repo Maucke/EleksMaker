@@ -24,7 +24,7 @@ extern uint16_t color_now, color_half, color_min;
 #define PI 3.14159f
 
 #define SCR_WIDTH   240
-#define SCR_HEIGHT  135
+#define SCR_HEIGHT  240
 
 
 

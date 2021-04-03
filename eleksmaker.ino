@@ -48,7 +48,7 @@ DEVICE_STR Device_NStr;
 DEVICE_STR Device_VStr;
 
 char fpschar[50];
-bool showfpsflag = false;
+bool showfpsflag = true;
 int fps = 0;
 
 static uint8_t TimeTHEME = 0;
@@ -157,7 +157,7 @@ void setup()
 	oled.Device_Init();
 	motion.OLED_AllMotion_Init();
 	rtc.setTime(30, 24, 15, 17, 1, 2021);  // 17th Jan 2021 15:24:30
-	initwifi();
+//	initwifi();
 	//Serial.println("Timeok");
 	Timer10ms = timerBegin(0, 80, true);//备用知识：定时器的型号选用           预分频【主频：80MHz】                   定时器上下计数【true？】
 	timerAttachInterrupt(Timer10ms, &onTimer10ms, true);//初始化完毕候，将定时器连接到中断：                定时器地址指针              中断处理函数                   中断边沿触发类型
@@ -169,6 +169,9 @@ void setup()
 	timerAlarmWrite(Timer500ms, 500000, true);//定时：         操作的定时器                  定时时长                数值是否重载【周期定时？】
 	timerAlarmEnable(Timer500ms);//开始启动：            启动哪一个定时器？
 	Serial.println("Initok");
+	Serial.println("Refrash_Screen");
+	oled.Refrash_Screen();
+	Serial.println("Refrash_Screenok");
 }
 extern TFT_eSPI tft;
 
@@ -179,15 +182,15 @@ void loop()
 	static int runcount = 0;
 	oled.Clear_Screen();
 	motion.OLED_CustormMotion(Device_Cmd.commandmotion);
-	fps++;
-	if (showfpsflag)
-		oled.OLED_SHFAny(0, 0, fpschar, 19, 0xffff);
+	//fps++;
+	//if (showfpsflag)
+	//	oled.OLED_SHFAny(0, 0, fpschar, 19, 0xffff);
 
-	//switch (Current_Mode)
-	//{
-	//case MODE_GAME:ui.SUIMainShow(); break;
-	//case MODE_NORMAL:ui.NUIMainShow(); break;
-	//case MODE_MUSIC:ui.MUIMainShow(); break;
+	switch (Current_Mode)
+	{
+	case MODE_GAME:ui.SUIMainShow(); break;
+	case MODE_NORMAL:ui.NUIMainShow(); break;
+	case MODE_MUSIC:ui.MUIMainShow(); break;
 	//case MODE_DATE:switch (TimeTHEME)
 	//{
 	//case 0:ui.TUIMainShow(); break;
@@ -197,33 +200,31 @@ void loop()
 	//	//				case 2:ui.T2UIMainShow();break;
 	//}
 	//			  break;
-	//case MODE_SHOW:ui.HUIMainShow(); break;
+	case MODE_SHOW:ui.HUIMainShow(); break;
 	//case MODE_CHROME:ui.GAMEUIMainShow(); break;
-	//case MODE_OFFLINE:break;
-	//	//			default:ui.SUIMainShow();break;
-	//}
-	
-	oled.Display_hbmp(74, 60, 70, 70, Anim_Spaceman[runcount++ / 5 % 9], 0xffff, 0);
-	
-	snprintf(tempstr,sizeof(tempstr),"%02d",rtc.getHour(true));
-	
-	oled.OLED_SHFAny(40, 10, tempstr, 30, 0xffff);
-	
-	oled.OLED_SHFAny(40 + 30 * 2, 10, ":", 30, 0xffff);
-	snprintf(tempstr, sizeof(tempstr), "%02d", rtc.getMinute());
-	oled.OLED_SHFAny(40 + 30 * 2 + 10, 10, tempstr, 30, 0xffff);
-	snprintf(tempstr, sizeof(tempstr), "%02d", rtc.getSecond());
-	oled.OLED_SHFAny(180, 30, tempstr, 18, 0xffff);
-	
+	case MODE_OFFLINE:break;
+		//			default:ui.SUIMainShow();break;
+	}
+	//
+	//oled.Display_hbmp(74, 60, 70, 70, Anim_Spaceman[runcount++ / 2 % 9], 0xffff);
+	//
+	//snprintf(tempstr,sizeof(tempstr),"%02d",rtc.getHour(true));
+	//
+	//oled.OLED_SHFAny(40, 10, tempstr, 30, 0xffff);
+	//
+	//oled.OLED_SHFAny(40 + 30 * 2, 10, ":", 30, 0xffff);
+	//snprintf(tempstr, sizeof(tempstr), "%02d", rtc.getMinute());
+	//oled.OLED_SHFAny(40 + 30 * 2 + 10, 10, tempstr, 30, 0xffff);
+	//snprintf(tempstr, sizeof(tempstr), "%02d", rtc.getSecond());
+	//oled.OLED_SHFAny(180, 30, tempstr, 18, 0xffff);
 
+	//osolar.year = rtc.getYear();
+	//osolar.month = rtc.getMonth()+1;
+	//osolar.day = rtc.getDay();
+	//lunar = toLunar(osolar);
 
-	osolar.year = rtc.getYear();
-	osolar.month = rtc.getMonth()+1;
-	osolar.day = rtc.getDay();
-	lunar = toLunar(osolar);
-
-	showdateandweek(160,78, osolar.month, osolar.day, rtc.getDayofWeek(), lunar.month, lunar.day);
-
+	//showdateandweek(160,78, osolar.month, osolar.day, rtc.getDayofWeek(), lunar.month, lunar.day);
+	Serial.println("Refrash_Screen");
 	oled.Refrash_Screen();
 	threadLoop();
 }
@@ -232,42 +233,42 @@ void showdateandweek(int x,int y,int month,int day,int week,int nmonth,int nday)
 {
 	char tempstr[10];
 	if (nmonth == 1)
-		oled.Display_hbmp(5 + 0 + x, 0 + y, 16, 16, image_wryh_16x16[15], 0xffff, 0);//正
+		oled.Display_hbmp(5 + 0 + x, 0 + y, 16, 16, image_wryh_16x16[15], 0xffff);//正
 	else if (nmonth == 11)
-		oled.Display_hbmp(5 + 0 + x, 0 + y, 16, 16, image_wryh_16x16[16], 0xffff, 0);//冬
+		oled.Display_hbmp(5 + 0 + x, 0 + y, 16, 16, image_wryh_16x16[16], 0xffff);//冬
 	else if (nmonth == 1)
-		oled.Display_hbmp(5 + 0 + x, 0 + y, 16, 16, image_wryh_16x16[17], 0xffff, 0);//腊
+		oled.Display_hbmp(5 + 0 + x, 0 + y, 16, 16, image_wryh_16x16[17], 0xffff);//腊
 	else
-		oled.Display_hbmp(5+0 + x, 0 + y, 16, 16, image_wryh_16x16[month], 0xffff, 0);
-	oled.Display_hbmp(5+0 + 16 + x, 0 + y, 16, 16, image_wryh_16x16[12], 0xffff, 0);
+		oled.Display_hbmp(5+0 + x, 0 + y, 16, 16, image_wryh_16x16[month], 0xffff);
+	oled.Display_hbmp(5+0 + 16 + x, 0 + y, 16, 16, image_wryh_16x16[12], 0xffff);
 	if (nday <= 10)
 	{
-		oled.Display_hbmp(5+0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[13], 0xffff, 0);//初
-		oled.Display_hbmp(5+0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday], 0xffff, 0);
+		oled.Display_hbmp(5+0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[13], 0xffff);//初
+		oled.Display_hbmp(5+0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday], 0xffff);
 	}
 	else if (nday > 20&&nday<30)
 	{
-		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[14], 0xffff, 0);//廿
-		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday%10], 0xffff, 0);
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[14], 0xffff);//廿
+		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday%10], 0xffff);
 	}
 	else if (nday == 20)
 	{
-		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[14], 0xffff, 0);//廿
-		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);//十
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[14], 0xffff);//廿
+		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff);//十
 	}
 	else if (nday == 30)
 	{
-		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[3], 0xffff, 0);//三
-		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);//十
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[3], 0xffff);//三
+		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff);//十
 	}
 	else if (nday > 10&& nday < 20)
 	{
-		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);//十
-		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday % 10], 0xffff, 0);
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff);//十
+		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday % 10], 0xffff);
 	}
 
-	oled.Display_hbmp(0 + 0 + x, 20 + y, 16, 16, image_wryh_16x16[11], 0xffff, 0);//周
-	oled.Display_hbmp(0 + 16 + x, 20 + y, 16, 16, image_wryh_16x16[week%7], 0xffff, 0);
+	oled.Display_hbmp(0 + 0 + x, 20 + y, 16, 16, image_wryh_16x16[11], 0xffff);//周
+	oled.Display_hbmp(0 + 16 + x, 20 + y, 16, 16, image_wryh_16x16[week%7], 0xffff);
 
 	sprintf(tempstr,"%d",month);
 	oled.OLED_SHFAny(0 + 36 + x, 22 + y, tempstr, 10, 0xffff);
