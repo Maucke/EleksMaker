@@ -54,6 +54,24 @@
     <ClInclude Include="bmp.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="Digital_F18x24.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Digital_F30x46.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wryh_16x16.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wryh_10x16.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SolarAndLuner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OLED_Animation.cpp">
@@ -72,6 +90,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="motion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SolarAndLuner.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="network.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

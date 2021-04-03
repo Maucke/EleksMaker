@@ -456,9 +456,9 @@ extern "C" {
 			switch (w)
 			{
 			case 4:OLED_HFAny(x, y, 4, 5, c, Defu_XF4x5, color); break;
-			case 18:if (c + '0' == ':')c = 10;  OLED_HFAny(x, y, 18, 24, c, image_Digital_F18x24, color); break;
-			case 30:if (c + '0' == ':')c = 10;  OLED_HFAny(x, y, 30, 46, c, image_Digital_F30x46, color); break;
-			case 10:if (ch[j] == '.') c = 11; OLED_HFAny(x, y, 10, 13, c, GeForce_10x13, color); break;
+			case 18:if (c + '0' == ':')c = 10; if (c > 10)return; OLED_HFAny(x, y, 18, 24, c, image_Digital_F18x24, color); break;
+			case 30:if (c + '0' == ':')c = 10; if (c > 10)return;  OLED_HFAny(x, y, 30, 46, c, image_Digital_F30x46, color); break;
+			case 10:if (ch[j] == '.') c = 11; if (c > 11)return; OLED_HFAny(x, y, 10, 13, c, GeForce_10x13, color); break;
 			case 13:OLED_HFAny(x, y, 13, 16, c, GeForce_13x16, color); break;
 			case 19:OLED_HFAny(x, y, 19, 23, c, GeForce_19x23, color); break;
 			case 25:OLED_HFAny(x, y, 25, 37, c, GeForce_25x37, color); break;

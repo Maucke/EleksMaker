@@ -15,6 +15,7 @@
 
 #include <stdarg.h>
 #include <TFT_eSPI.h>
+#include <ESP32Time.h>
 #include "OLED_Animation.h"
 #include "OLED_Driver.h"
 #include "OLED_GFX.h"
@@ -25,12 +26,16 @@
 #include "Spaceman.h"
 #include "bmp.h"
 #include "wryh_16x16.h"
-
+#include "SolarAndLuner.h"
+#include "network.h"
 // Define Functions below here or use other .ino or cpp files
 //
 uint16_t Display_Mode = MODE_CHROME;
 uint16_t Current_Mode = MODE_OFFLINE;
 
+Mydate osolar;
+Mydate lunar;
+ESP32Time rtc;
 OLED_GFX oled = OLED_GFX();
 OLED_FFT fft = OLED_FFT();
 OLED_Animation motion = OLED_Animation();
@@ -151,7 +156,9 @@ void setup()
 	Serial.setTimeout(1);
 	oled.Device_Init();
 	motion.OLED_AllMotion_Init();
-
+	rtc.setTime(30, 24, 15, 17, 1, 2021);  // 17th Jan 2021 15:24:30
+	initwifi();
+	//Serial.println("Timeok");
 	Timer10ms = timerBegin(0, 80, true);//备用知识：定时器的型号选用           预分频【主频：80MHz】                   定时器上下计数【true？】
 	timerAttachInterrupt(Timer10ms, &onTimer10ms, true);//初始化完毕候，将定时器连接到中断：                定时器地址指针              中断处理函数                   中断边沿触发类型
 	timerAlarmWrite(Timer10ms, 10000, true);//定时：         操作的定时器                  定时时长                数值是否重载【周期定时？】
@@ -161,11 +168,14 @@ void setup()
 	timerAttachInterrupt(Timer500ms, &onTimer500ms, true);//初始化完毕候，将定时器连接到中断：                定时器地址指针              中断处理函数                   中断边沿触发类型
 	timerAlarmWrite(Timer500ms, 500000, true);//定时：         操作的定时器                  定时时长                数值是否重载【周期定时？】
 	timerAlarmEnable(Timer500ms);//开始启动：            启动哪一个定时器？
+	Serial.println("Initok");
 }
 extern TFT_eSPI tft;
+
 // Add the main program code into the continuous loop() function
 void loop()
 {
+	char tempstr[20];
 	static int runcount = 0;
 	oled.Clear_Screen();
 	motion.OLED_CustormMotion(Device_Cmd.commandmotion);
@@ -192,18 +202,33 @@ void loop()
 	//case MODE_OFFLINE:break;
 	//	//			default:ui.SUIMainShow();break;
 	//}
+	
 	oled.Display_hbmp(74, 60, 70, 70, Anim_Spaceman[runcount++ / 5 % 9], 0xffff, 0);
-	oled.OLED_SHFAny(40, 10, "12", 30, 0xffff);
+	
+	snprintf(tempstr,sizeof(tempstr),"%02d",rtc.getHour(true));
+	
+	oled.OLED_SHFAny(40, 10, tempstr, 30, 0xffff);
+	
 	oled.OLED_SHFAny(40 + 30 * 2, 10, ":", 30, 0xffff);
-	oled.OLED_SHFAny(40 + 30 * 2 + 10, 10, "34", 30, 0xffff);
-	oled.OLED_SHFAny(180, 30, "56", 18, 0xffff);
-	showdateandweek(160,78, runcount, runcount/100%12+1, runcount/10%31+1, runcount/70%7, runcount/100%12+1, runcount / 10 % 30 + 1);
+	snprintf(tempstr, sizeof(tempstr), "%02d", rtc.getMinute());
+	oled.OLED_SHFAny(40 + 30 * 2 + 10, 10, tempstr, 30, 0xffff);
+	snprintf(tempstr, sizeof(tempstr), "%02d", rtc.getSecond());
+	oled.OLED_SHFAny(180, 30, tempstr, 18, 0xffff);
+	
+
+
+	osolar.year = rtc.getYear();
+	osolar.month = rtc.getMonth()+1;
+	osolar.day = rtc.getDay();
+	lunar = toLunar(osolar);
+
+	showdateandweek(160,78, osolar.month, osolar.day, rtc.getDayofWeek(), lunar.month, lunar.day);
 
 	oled.Refrash_Screen();
 	threadLoop();
 }
 
-void showdateandweek(int x,int y,int year,int month,int day,int week,int nmonth,int nday)
+void showdateandweek(int x,int y,int month,int day,int week,int nmonth,int nday)
 {
 	char tempstr[10];
 	if (nmonth == 1)
@@ -217,7 +242,7 @@ void showdateandweek(int x,int y,int year,int month,int day,int week,int nmonth,
 	oled.Display_hbmp(5+0 + 16 + x, 0 + y, 16, 16, image_wryh_16x16[12], 0xffff, 0);
 	if (nday <= 10)
 	{
-		oled.Display_hbmp(5+0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[15], 0xffff, 0);//正
+		oled.Display_hbmp(5+0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[13], 0xffff, 0);//初
 		oled.Display_hbmp(5+0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday], 0xffff, 0);
 	}
 	else if (nday > 20&&nday<30)
@@ -227,17 +252,17 @@ void showdateandweek(int x,int y,int year,int month,int day,int week,int nmonth,
 	}
 	else if (nday == 20)
 	{
-		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[14], 0xffff, 0);
-		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[14], 0xffff, 0);//廿
+		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);//十
 	}
 	else if (nday == 30)
 	{
-		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[3], 0xffff, 0);
-		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[3], 0xffff, 0);//三
+		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);//十
 	}
 	else if (nday > 10&& nday < 20)
 	{
-		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);
+		oled.Display_hbmp(5 + 0 + 32 + x, 0 + y, 16, 16, image_wryh_16x16[10], 0xffff, 0);//十
 		oled.Display_hbmp(5 + 0 + 48 + x, 0 + y, 16, 16, image_wryh_16x16[nday % 10], 0xffff, 0);
 	}
 
@@ -294,6 +319,7 @@ byte ReponseID[40] = { 0xFF,0x55,'O','K' };
 static void procParse(const byte* pData, uint len) {
 	// CmdID
 	uint i;
+	static uint timeflag = 0;
 
 	switch (MAKEWORD(pData[3], pData[2])) {
 
@@ -371,6 +397,12 @@ static void procParse(const byte* pData, uint len) {
 		break;
 	case Uart_Second:
 		Device_Msg.uartsecond = MAKEWORD(pData[6], pData[5]);
+
+		if (timeflag != Device_Msg.uarthour)
+		{
+			rtc.setTime(Device_Msg.uartsecond, Device_Msg.uartminute, Device_Msg.uarthour, Device_Msg.uartday, Device_Msg.uartmonth, Device_Msg.uartyear);  // 17th Jan 2021 15:24:30
+			timeflag = Device_Msg.uarthour;
+		}
 		break;
 	case End_Frame_ADDR:
 		if (MAKEWORD(pData[6], pData[5]) == 0x5A5A) {}
