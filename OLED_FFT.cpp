@@ -263,7 +263,7 @@ extern "C" {
 		static int runCount2 = 0;
 		/*******************œ‘ æ*******************/
 	//	if(Device_Msg.leftvol)
-		Rn = 50 + Device_Msg.leftvol / (20 * 256);
+		Rn = 100 + Device_Msg.leftvol / (20 * 256);
 		//	else
 		//		Rn = 5;
 

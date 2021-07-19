@@ -370,7 +370,7 @@ extern "C" {
 		int i;
 		for (i = 50; i < 60; i++)
 			SetCurrent(i, 0);
-		SetTarget(50, 160 + 16);
+		SetTarget(50, 240);
 	}
 	void OLED_UI::HUI_Out() {
 		int i;
@@ -381,7 +381,7 @@ extern "C" {
 	}
 	OLED_STATUS OLED_UI::HUIMainShow() {
 
-		oled.Display_bmp(0 - 160 + pit[50].current, 0, 128, 128, Logo_amd);
+		oled.Display_bmp(0 - 240 + pit[50].current, 0, 240, 240, gImage_hello);
 
 		return OLED_IDLE;
 	}

@@ -154,11 +154,12 @@ void setup()
 {
 	Serial.begin(115200);
 	Serial.setTimeout(1);
+//	initwifi();
+	Serial.println(ESP.getFreeHeap());
 	oled.Device_Init();
 	motion.OLED_AllMotion_Init();
 	rtc.setTime(30, 24, 15, 17, 1, 2021);  // 17th Jan 2021 15:24:30
-//	initwifi();
-	//Serial.println("Timeok");
+	Serial.println("Timeok");
 	Timer10ms = timerBegin(0, 80, true);//备用知识：定时器的型号选用           预分频【主频：80MHz】                   定时器上下计数【true？】
 	timerAttachInterrupt(Timer10ms, &onTimer10ms, true);//初始化完毕候，将定时器连接到中断：                定时器地址指针              中断处理函数                   中断边沿触发类型
 	timerAlarmWrite(Timer10ms, 10000, true);//定时：         操作的定时器                  定时时长                数值是否重载【周期定时？】
@@ -172,6 +173,7 @@ void setup()
 	Serial.println("Refrash_Screen");
 	oled.Refrash_Screen();
 	Serial.println("Refrash_Screenok");
+	Serial.println(ESP.getFreeHeap());
 }
 extern TFT_eSPI tft;
 

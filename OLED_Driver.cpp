@@ -217,11 +217,13 @@ extern "C" {
 	void OLED_Driver::Refrash_Screen(void) {
 
 		tft.pushImage(0, 0, SCR_WIDTH, SCR_HEIGHT, OLED_GRAM);
+	/*	free(OLED_GRAM);*/
 	}
 
 
 	void OLED_Driver::Clear_Screen(void) {
-
+		//OLED_GRAM = (uint16_t*)realloc(OLED_GRAM, 57600);
+	/*	memset(OLED_GRAM, 0, 57600);*/
 		int i,j;
 		for(i=0;i<SCR_HEIGHT;i++)  {
 		  for(j=0;j<SCR_WIDTH;j++)  {
@@ -252,9 +254,11 @@ extern "C" {
 
 
 	void OLED_Driver::Device_Init(void) {
-		OLED_GRAM = (uint16_t*)malloc(sizeof(uint16_t) * SCR_WIDTH * SCR_HEIGHT);
+		//OLED_GRAM = (uint16_t*)malloc(sizeof(uint16_t) * SCR_WIDTH * SCR_HEIGHT);
+		OLED_GRAM = (uint16_t*)malloc(57600);
+		//OLED_GRAM = (uint16_t*)realloc(OLED_GRAM, 57600);
 		tft.init();
-		tft.setRotation(1);
+		//tft.setRotation(1);
 		tft.setSwapBytes(true);
 	}
 

@@ -86,6 +86,7 @@ extern "C" {
 		void Display_bbmp(int x, int y, int w, int h, const uint8_t* ch, uint16_t color);
 
 		void Display_bmp(int x, int y, int w, int h, const uint8_t* ch);
+		void Display_bmp(int x, int y, int w, int h, const uint8_t* ch, uint16_t color);
 		void Invert(bool v);
 		void Draw_Pixel(long x, long y);
 		void Draw_Pixel(long x, long y, uint16_t color);

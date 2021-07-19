@@ -6,7 +6,7 @@
 #include "ASCII_Font.h"
 #include "stdlib.h"
 
-#define TrumHeight   128
+#define TrumHeight   240
 #define TrumWidth    1
 #define TrumInterval 1
 #define TrumNum	   	 160
